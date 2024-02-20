@@ -92,20 +92,17 @@ func main() {
 		boids = append(boids, &boid)
 	}
 
-	window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
-
 	running := true
 	for running {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch event.(type) {
+			switch ev := event.(type) {
 			case *sdl.QuitEvent:
 				println("Quit")
 				running = false
 			case *sdl.MouseButtonEvent:
-				mouseEvent := event.(*sdl.MouseButtonEvent)
-				if mouseEvent.Type == sdl.MOUSEBUTTONDOWN {
-					if mouseEvent.Button == sdl.BUTTON_LEFT {
-						pos := Point{X: float64(mouseEvent.X), Y: float64(mouseEvent.Y)}
+				if ev.Type == sdl.MOUSEBUTTONDOWN {
+					if ev.Button == sdl.BUTTON_LEFT {
+						pos := Point{X: float64(ev.X), Y: float64(ev.Y)}
 						vel := rand.Float64()*(BOID_MAX_SPEED-BOID_MIN_SPEED) + BOID_MIN_SPEED
 						dir := rand.Float64() * 2 * math.Pi
 
@@ -117,8 +114,7 @@ func main() {
 					}
 				}
 			case *sdl.MouseMotionEvent:
-				mouseEvent := event.(*sdl.MouseMotionEvent)
-				mouse = Point{X: float64(mouseEvent.X), Y: float64(mouseEvent.Y)}
+				mouse = Point{X: float64(ev.X), Y: float64(ev.Y)}
 			case *sdl.WindowEvent:
 				windowEvent := event.(*sdl.WindowEvent)
 				if windowEvent.Event == sdl.WINDOWEVENT_RESIZED {
@@ -131,9 +127,8 @@ func main() {
 					}
 				}
 			case *sdl.KeyboardEvent:
-				keyEvent := event.(*sdl.KeyboardEvent)
-				if keyEvent.Type == sdl.KEYDOWN {
-					switch keyEvent.Keysym.Sym {
+				if ev.Type == sdl.KEYDOWN {
+					switch ev.Keysym.Sym {
 					case sdl.K_q:
 						BOID_ALIGN_FACTOR += 0.001
 						fmt.Println("New align factor: ", BOID_ALIGN_FACTOR)
@@ -159,6 +154,12 @@ func main() {
 							"\n\tBOID_COHESION_FACTOR=" + strconv.FormatFloat(BOID_COHESION_FACTOR, 'f', -1, 64) +
 							"\n\tBOID_SEPARATION_FACTOR=" + strconv.FormatFloat(BOID_SEPARATION_FACTOR, 'f', -1, 64) +
 							"\n)")
+					case sdl.K_F11:
+						if window.GetFlags()&sdl.WINDOW_FULLSCREEN == 0 {
+							window.SetFullscreen(sdl.WINDOW_FULLSCREEN)
+						} else {
+							window.SetFullscreen(0)
+						}
 					}
 				}
 			}

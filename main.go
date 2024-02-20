@@ -26,6 +26,7 @@ const (
 
 	DRAW_QUADTREE = false
 	DRAW_BOIDS    = true
+	DRAW_CURSOR   = false
 
 	BOID_MAX_SPEED = 2.5
 	BOID_MIN_SPEED = 2.2
@@ -209,9 +210,12 @@ func update() {
 }
 
 func draw() {
-	mouseCircle := Circle{Position: mouse, Radius: 20}
-	mouseCircle.Fill(renderer, Color{R: 0, G: 0, B: 255, A: 50})
-	mouseCircle.Draw(renderer, Color{R: 0, G: 0, B: 255, A: 255})
+
+	if DRAW_CURSOR {
+		mouseCircle := Circle{Position: mouse, Radius: 20}
+		mouseCircle.Fill(renderer, Color{R: 0, G: 0, B: 255, A: 50})
+		mouseCircle.Draw(renderer, Color{R: 0, G: 0, B: 255, A: 255})
+	}
 
 	if DRAW_QUADTREE {
 		tree.DrawOutline(renderer, &Color{R: 0, G: 0, B: 0, A: 255})
